@@ -1,7 +1,6 @@
 from .provider import PNSProvider
 from ..abis import pnsABI
 from ..tools import interface
-from typing import Union
 
 
 class PNSEngine(object):
@@ -20,10 +19,10 @@ class PNSEngine(object):
     def is_recorded(self, name: str) -> bool:
         pass
 
-    def get_by_name(self, name: str) -> Union[str, bool, bool]:
+    def get_by_name(self, name: str) -> tuple[str, bool, bool]:
         pass
 
-    def get_by_address(self, address: interface.Address) -> Union[str, bool, bool]:
+    def get_by_address(self, address: interface.Address) -> tuple[str, bool, bool]:
         pass
 
     def new_record(self, name: str) -> dict:
