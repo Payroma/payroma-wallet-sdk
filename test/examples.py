@@ -1,4 +1,4 @@
-from pyromasdk import MainProvider, PNSProvider, engine, tools
+from payromasdk import MainProvider, PNSProvider, engine, tools
 
 
 # Create a network interface
