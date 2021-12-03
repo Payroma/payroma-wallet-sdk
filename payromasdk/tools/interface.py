@@ -113,19 +113,17 @@ class Wallet(object):
     USERNAME = 1
     ADDRESS = 2
     PIN_CODE = 3
-    PRIVATE_KEY = 4
-    DATE_CREATED = 5
-    IS_FAVORITE = 6
+    DATE_CREATED = 4
+    IS_FAVORITE = 5
 
     def __init__(
             self, address_id: int, username: str, address: str,
-            pin_code: bytes, private_key: bytes, date_created: str, is_favorite: bool
+            pin_code: bytes, date_created: str, is_favorite: bool
     ):
         self.addressID = address_id
         self.username = username
         self.address = Address(address)
         self.pinCode = pin_code
-        self.privateKey = private_key
         self.dateCreated = date_created
         self.isFavorite = is_favorite
 
@@ -186,9 +184,9 @@ class AddressBook(object):
 
 
 class Stake(object):
-    STAKE_TOKEN_CONTRACT = 1
-    END_BLOCK = 2
-    DURATION = 3
+    END_BLOCK = 1
+    DURATION = 2
+    STAKE_TOKEN_CONTRACT = 3
     REWARD_TOKEN_CONTRACT = 4
     STAKE_TOKEN_SYMBOL = 5
     REWARD_TOKEN_SYMBOL = 6

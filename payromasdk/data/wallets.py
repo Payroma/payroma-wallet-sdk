@@ -21,14 +21,11 @@ def __loader() -> SPDatabase.DataManager:
     # Default configuration and load
     database = SPDatabase.DataManager(
         config, SPSecurity.secure_string(
-            # Set the application password here, EX: test = (116, 101, 115, 116)
+            # Set the application password here
             (116, 101, 115, 116)
         ).decode()
     )
     database.load()
-
-    # Upgrade to database V2
-    # upgrade_to_v2(database.get_data())
 
     return database
 
