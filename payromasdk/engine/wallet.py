@@ -10,14 +10,20 @@ def get_all() -> list:
 
 
 def add_new(username: str, password: str, pin_code: str, otp_code: str) -> bool:
+    """
+    Add a new wallet
+    :exception SPDatabase.ITEM_EXISTS_ERROR
+    :exception OSError, FileNotFoundError, PermissionError
+    :return: bool
+    """
+
     valid = False
     result = walletcreator.access(username, password, pin_code, otp_code)
     if isinstance(result, tuple):
         address, _, pin_code_bytes = result
         wallet_interface = interface.Wallet(
-            address_id=address.to_integer(),
             username=username,
-            address=address.value(),
+            address=address,
             pin_code=pin_code_bytes,
             date_created=time.ctime(),
             is_favorite=False
@@ -29,10 +35,19 @@ def add_new(username: str, password: str, pin_code: str, otp_code: str) -> bool:
 
 
 def remove(wallet_interface: interface.Wallet) -> bool:
+    """
+    Remove specific wallet interface
+    :return: bool
+    """
+
     valid = False
     if isinstance(wallet_interface, interface.Wallet):
-        wallets.db.remove_item(item_id=wallet_interface.addressID)
-        valid = True
+        try:
+            wallets.db.remove_item(item_id=wallet_interface.addressID)
+        except KeyError:
+            pass
+        else:
+            valid = True
 
     return valid
 
@@ -41,6 +56,13 @@ def backup_wallets(
         path: str, wallets_id: list = None, progress_event: callable = None,
         password: Union[str, wallets.SPDatabase.ControlObject] = wallets.SPDatabase.Control.AUTO
 ) -> bool:
+    """
+    Backup all wallets are selected
+    :exception SPDatabase.ITEM_NOT_FOUND_ERROR
+    :exception OSError, MemoryError, FileNotFoundError, PermissionError
+    :return: bool
+    """
+
     wallets.db.dump_backup(
         items_id=wallets_id, destination=path, password=password, progress_event=progress_event
     )
@@ -52,6 +74,15 @@ def import_wallets(
         password: Union[str, wallets.SPDatabase.ControlObject] = wallets.SPDatabase.Control.AUTO,
         mode: wallets.SPDatabase.ControlObject = wallets.SPDatabase.Control.UPDATE
 ) -> bool:
+    """
+    Import all wallets are selected
+    :exception SPDatabase.FILE_SUPPORT_ERROR
+    :exception SPCrypto.FILE_SUPPORT_ERROR
+    :exception SPCrypto.PERMISSION_ERROR
+    :exception: OSError, MemoryError, FileNotFoundError, PermissionError
+    :return: bool
+    """
+
     wallets.db.load_backup(
         path=path, items_id=wallets_id, password=password, mode=mode, progress_event=progress_event
     )
@@ -117,7 +148,7 @@ class WalletEngine(object):
         self.__isLogged = False
 
     def tokens(self) -> list:
-        current_network = MainProvider.interface.name
+        current_network = MainProvider.interface.networkID
         try:
             return tokens.db.get_item(self.interface.addressID)[current_network]
         except KeyError:
@@ -126,7 +157,7 @@ class WalletEngine(object):
     def add_token(self, token_interface: interface.Token) -> bool:
         valid = False
         if isinstance(token_interface, interface.Token):
-            current_network = MainProvider.interface.name
+            current_network = MainProvider.interface.networkID
             _tokens = {current_network: self.tokens()}
             _tokens[current_network].append(token_interface)
 
@@ -158,7 +189,7 @@ class WalletEngine(object):
         return valid
 
     def transactions(self) -> list:
-        current_network = MainProvider.interface.name
+        current_network = MainProvider.interface.networkID
         try:
             return transactions.db.get_item(self.interface.addressID)[current_network]
         except KeyError:
@@ -167,7 +198,7 @@ class WalletEngine(object):
     def add_transaction(self, transaction_interface: interface.Transaction) -> bool:
         valid = False
         if isinstance(transaction_interface, interface.Transaction):
-            current_network = MainProvider.interface.name
+            current_network = MainProvider.interface.networkID
             _transactions = {current_network: self.transactions()}
             _transactions[current_network].append(transaction_interface)
 

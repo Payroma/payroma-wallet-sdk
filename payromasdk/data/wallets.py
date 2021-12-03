@@ -17,11 +17,10 @@ def upgrade_to_v2():
             # Ignore the upgraded wallets
             continue
 
-        id_v2 = interface.Address(data[wallet_id][address_element]).to_integer()
-        data[id_v2] = interface.Wallet(
-            address_id=id_v2,
+        address = interface.Address(data[wallet_id][address_element])
+        data[address.to_integer()] = interface.Wallet(
             username=data[wallet_id][username_element],
-            address=data[wallet_id][address_element],
+            address=address,
             pin_code=data[wallet_id][pin_element],
             date_created=time.ctime(),
             is_favorite=data[wallet_id][is_favorite_element]

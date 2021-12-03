@@ -4,6 +4,11 @@ import hashlib
 import webbrowser
 
 
+def _convert_to_id(value: str) -> int:
+    sha256 = hashlib.sha256(value.encode()).hexdigest()
+    return int(sha256, 16) % (10 ** 8)
+
+
 class Network(object):
     RPC = 1
     NAME = 2
@@ -14,6 +19,7 @@ class Network(object):
     def __init__(
             self, rpc: str, name: str, chain_id: int, symbol: str, explorer: str
     ):
+        self.networkID = _convert_to_id(rpc)
         self.rpc = rpc
         self.name = name
         self.chainID = chain_id
@@ -26,9 +32,7 @@ class Address(object):
             self, value: str
     ):
         self.__value = Web3.toChecksumAddress(value)
-
-        sha256 = hashlib.sha256(self.__value.encode()).hexdigest()
-        self.__int = int(sha256, 16) % (10 ** 8)
+        self.__int = _convert_to_id(self.__value)
 
     def value(self) -> str:
         return self.__value
@@ -117,12 +121,11 @@ class Wallet(object):
     IS_FAVORITE = 5
 
     def __init__(
-            self, address_id: int, username: str, address: str,
-            pin_code: bytes, date_created: str, is_favorite: bool
+            self, username: str, address: Address, pin_code: bytes, date_created: str, is_favorite: bool
     ):
-        self.addressID = address_id
+        self.addressID = address.to_integer()
         self.username = username
-        self.address = Address(address)
+        self.address = address
         self.pinCode = pin_code
         self.dateCreated = date_created
         self.isFavorite = is_favorite
@@ -141,14 +144,15 @@ class Token(object):
 
 
 class Transaction(object):
-    FUNCTION = 1
-    FROM = 2
-    TO = 3
-    AMOUNT = 4
-    SYMBOL = 5
-    DECIMALS = 6
-    DATE = 7
-    STATUS = 8
+    TX_HASH = 1
+    FUNCTION = 2
+    FROM = 3
+    TO = 4
+    AMOUNT = 5
+    SYMBOL = 6
+    DECIMALS = 7
+    DATE = 8
+    STATUS = 9
 
     class Status:
         FAILED = 0
@@ -176,11 +180,11 @@ class AddressBook(object):
     ADDRESS = 2
 
     def __init__(
-            self, address_id: int, username: str, address: str
+            self, username: str, address: Address
     ):
-        self.addressID = address_id
+        self.addressID = address.to_integer()
         self.username = username
-        self.address = Address(address)
+        self.address = address
 
 
 class Stake(object):
