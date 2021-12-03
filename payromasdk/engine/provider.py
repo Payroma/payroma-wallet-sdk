@@ -10,7 +10,7 @@ class __Provider(object):
         self.web3 = None
 
     def connect(self, network_interface: interface.Network):
-        pass
+        self.interface = network_interface
 
     def is_connected(self) -> bool:
         pass

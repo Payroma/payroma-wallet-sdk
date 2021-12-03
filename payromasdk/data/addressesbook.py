@@ -14,13 +14,13 @@ def __loader() -> SPDatabase.DataManager:
 
     # Memory setup
     config = SPDatabase.FileConfig()
-    config.database_update(file='addressesbook')
+    config.database_update(file='addressesbook', extension='db')
     config.setup()
 
     # Default configuration and load
     database = SPDatabase.DataManager(
         config, SPSecurity.secure_string(
-            # Set the application password here, EX: test = (116, 101, 115, 116)
+            # Set the application password here
             (116, 101, 115, 116)
         ).decode()
     )

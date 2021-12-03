@@ -6,22 +6,45 @@ import time
 
 
 def get_all() -> list:
-    pass
+    return list(wallets.db.get_data().values())
 
 
 def add_new(username: str, password: str, pin_code: str, otp_code: str) -> bool:
-    pass
+    valid = False
+    result = walletcreator.access(username, password, pin_code, otp_code)
+    if isinstance(result, tuple):
+        address, _, pin_code_bytes = result
+        wallet_interface = interface.Wallet(
+            address_id=address.to_integer(),
+            username=username,
+            address=address.value(),
+            pin_code=pin_code_bytes,
+            date_created=time.ctime(),
+            is_favorite=False
+        )
+        wallets.db.update_item(value=wallet_interface, item_id=wallet_interface.addressID)
+        valid = True
+
+    return valid
 
 
 def remove(wallet_interface: interface.Wallet) -> bool:
-    pass
+    valid = False
+    if isinstance(wallet_interface, interface.Wallet):
+        wallets.db.remove_item(item_id=wallet_interface.addressID)
+        valid = True
+
+    return valid
 
 
 def backup_wallets(
         path: str, wallets_id: list = None, progress_event: callable = None,
         password: Union[str, wallets.SPDatabase.ControlObject] = wallets.SPDatabase.Control.AUTO
 ) -> bool:
-    pass
+    wallets.db.dump_backup(
+        items_id=wallets_id, destination=path, password=password, progress_event=progress_event
+    )
+    return True
 
 
 def import_wallets(
@@ -29,7 +52,11 @@ def import_wallets(
         password: Union[str, wallets.SPDatabase.ControlObject] = wallets.SPDatabase.Control.AUTO,
         mode: wallets.SPDatabase.ControlObject = wallets.SPDatabase.Control.UPDATE
 ) -> bool:
-    pass
+    wallets.db.load_backup(
+        path=path, items_id=wallets_id, password=password, mode=mode, progress_event=progress_event
+    )
+    wallets.upgrade_to_v2()
+    return True
 
 
 class WalletEngine(object):
@@ -40,49 +67,133 @@ class WalletEngine(object):
         self.interface = wallet_interface
 
     def username(self) -> str:
-        pass
+        return self.interface.username
 
     def address(self) -> interface.Address:
-        pass
+        return self.interface.address
 
     def pin_code(self) -> bytes:
-        pass
+        return self.interface.pinCode
 
     def private_key(self, otp_code: str) -> str:
-        pass
+        value = ''
+        if self.__isLogged:
+            result = walletcreator.access(
+                self.interface.username, self.__password, self.interface.pinCode, otp_code
+            )
+            if isinstance(result, tuple):
+                _, private_key, _ = result
+                value = private_key
+
+        return value
 
     def date_created(self) -> str:
-        pass
+        return self.interface.dateCreated
 
     def is_favorite(self) -> bool:
-        pass
+        return self.interface.isFavorite
 
     def is_logged(self) -> bool:
-        pass
+        return self.__isLogged
 
     def set_favorite(self, status: bool):
-        pass
+        self.interface.isFavorite = status
+        wallets.db.dump()
 
     def login(self, password: str, otp_code: str) -> bool:
-        pass
+        valid = False
+        result = walletcreator.access(
+            self.interface.username, password, self.interface.pinCode, otp_code
+        )
+        if isinstance(result, tuple):
+            self.__password = password
+            self.__isLogged = True
+            valid = True
+
+        return valid
 
     def logout(self):
-        pass
+        self.__password = None
+        self.__isLogged = False
 
     def tokens(self) -> list:
-        pass
+        current_network = MainProvider.interface.name
+        try:
+            return tokens.db.get_item(self.interface.addressID)[current_network]
+        except KeyError:
+            return []
 
     def add_token(self, token_interface: interface.Token) -> bool:
-        pass
+        valid = False
+        if isinstance(token_interface, interface.Token):
+            current_network = MainProvider.interface.name
+            _tokens = {current_network: self.tokens()}
+            _tokens[current_network].append(token_interface)
+
+            try:
+                tokens.db.get_item(self.interface.addressID).update(_tokens)
+            except KeyError:
+                tokens.db.update_item(
+                    value=_tokens, item_id=self.interface.addressID, ignore_item_exists=True
+                )
+            else:
+                tokens.db.dump()
+            finally:
+                valid = True
+
+        return valid
 
     def remove_token(self, token_interface: interface.Token) -> bool:
-        pass
+        valid = False
+        if isinstance(token_interface, interface.Token):
+            try:
+                _tokens = self.tokens()
+                _tokens.remove(token_interface)
+            except ValueError:
+                pass
+            else:
+                tokens.db.dump()
+                valid = True
+
+        return valid
 
     def transactions(self) -> list:
-        pass
+        current_network = MainProvider.interface.name
+        try:
+            return transactions.db.get_item(self.interface.addressID)[current_network]
+        except KeyError:
+            return []
 
     def add_transaction(self, transaction_interface: interface.Transaction) -> bool:
-        pass
+        valid = False
+        if isinstance(transaction_interface, interface.Transaction):
+            current_network = MainProvider.interface.name
+            _transactions = {current_network: self.transactions()}
+            _transactions[current_network].append(transaction_interface)
+
+            try:
+                transactions.db.get_item(self.interface.addressID).update(_transactions)
+            except KeyError:
+                transactions.db.update_item(
+                    value=_transactions, item_id=self.interface.addressID, ignore_item_exists=True
+                )
+            else:
+                transactions.db.dump()
+            finally:
+                valid = True
+
+        return valid
 
     def remove_transaction(self, transaction_interface: interface.Transaction) -> bool:
-        pass
+        valid = False
+        if isinstance(transaction_interface, interface.Transaction):
+            try:
+                _transactions = self.transactions()
+                _transactions.remove(transaction_interface)
+            except ValueError:
+                pass
+            else:
+                transactions.db.dump()
+                valid = True
+
+        return valid
