@@ -1,5 +1,6 @@
 from web3 import Web3
 from typing import Union
+import re
 import hashlib
 import webbrowser
 
@@ -31,6 +32,9 @@ class Address(object):
     def __init__(
             self, value: str
     ):
+        if not re.compile('^0x([A-Fa-f0-9]{40})$').match(value):
+            raise ValueError("wrong address")
+
         self.__value = Web3.toChecksumAddress(value)
         self.__int = _convert_to_id(self.__value)
 
@@ -42,6 +46,31 @@ class Address(object):
 
     def explorer_view(self, network_interface: Network, browse: bool = True) -> str:
         url = '{}/address/{}'.format(network_interface.explorer, self.__value)
+        if browse:
+            webbrowser.open_new(url)
+
+        return url
+
+
+class TXHash(object):
+    def __init__(
+            self, value: str
+    ):
+        value = value.lower()
+        if not re.compile('^0x([a-f0-9]{64})$').match(value):
+            raise ValueError("wrong tx hash")
+
+        self.__value = value
+        self.__int = _convert_to_id(self.__value)
+
+    def value(self) -> str:
+        return self.__value
+
+    def to_integer(self) -> int:
+        return self.__int
+
+    def explorer_view(self, network_interface: Network, browse: bool = True) -> str:
+        url = '{}/tx/{}'.format(network_interface.explorer, self.__value)
         if browse:
             webbrowser.open_new(url)
 
@@ -159,7 +188,7 @@ class Transaction(object):
         PENDING = 2
 
     def __init__(
-            self, tx_hash: str, function: str,
+            self, tx_hash: TXHash, function: str,
             from_address: Address, to_address: Address, amount: WeiAmount,
             symbol: str, date_created: str, status: int
     ):
