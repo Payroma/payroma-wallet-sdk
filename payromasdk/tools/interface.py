@@ -109,7 +109,7 @@ class EtherAmount(object):
     def value(self) -> Union[str, int, float]:
         return self.__value
 
-    def to_wei(self) -> float:
+    def to_wei(self) -> int:
         return self.__wei
 
 
@@ -136,9 +136,9 @@ class Token(object):
     DECIMALS = 2
 
     def __init__(
-            self, contract: str, symbol: str, decimals: int
+            self, contract: Address, symbol: str, decimals: int
     ):
-        self.contract = Address(contract)
+        self.contract = contract
         self.symbol = symbol
         self.decimals = decimals
 
@@ -150,9 +150,8 @@ class Transaction(object):
     TO = 4
     AMOUNT = 5
     SYMBOL = 6
-    DECIMALS = 7
-    DATE = 8
-    STATUS = 9
+    DATE = 7
+    STATUS = 8
 
     class Status:
         FAILED = 0
@@ -161,16 +160,15 @@ class Transaction(object):
 
     def __init__(
             self, tx_hash: str, function: str,
-            from_address: str, to_address: str, amount: int,
-            symbol: str, decimals: int, date_created: str, status: int
+            from_address: Address, to_address: Address, amount: WeiAmount,
+            symbol: str, date_created: str, status: int
     ):
         self.txHash = tx_hash
         self.function = function
-        self.fromAddress = Address(from_address)
-        self.toAddress = Address(to_address)
-        self.amount = WeiAmount(amount, decimals)
+        self.fromAddress = from_address
+        self.toAddress = to_address
+        self.amount = amount
         self.symbol = symbol
-        self.decimals = decimals
         self.dateCreated = date_created
         self.status = status
 
@@ -198,12 +196,12 @@ class Stake(object):
     REWARD_TOKEN_DECIMALS = 8
 
     def __init__(
-            self, contract: str, end_block: int, duration: str,
-            stake_token_contract: str, reward_token_contract: str,
+            self, contract: Address, end_block: int, duration: str,
+            stake_token_contract: Address, reward_token_contract: Address,
             stake_token_symbol: str, reward_token_symbol: str,
             stake_token_decimals: int, reward_token_decimals: int
     ):
-        self.contract = Address(contract)
+        self.contract = contract
         self.endBlock = end_block
         self.duration = duration
         self.stakeTokenContract = stake_token_contract
