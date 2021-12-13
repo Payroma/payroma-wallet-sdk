@@ -27,3 +27,6 @@ def access(
         username: str, password: str, pin_code: Union[str, bytes], otp_code: str
 ) -> Union[bool, tuple[interface.Address, str, bytes]]:
     pass
+
+
+__all__ = ['otp_hash', 'access']

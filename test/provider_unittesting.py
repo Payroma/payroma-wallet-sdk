@@ -140,7 +140,7 @@ class NetworkUnitTesting(unittest.TestCase):
                 engine.provider.MainProvider.add_gas(tx)
                 tx_hash = engine.provider.MainProvider.send_transaction(tx, private_key)
                 time.sleep(5)
-                tx_hash.explorer_view(network_interface=engine.provider.MainProvider.interface)
+                tx_hash.explorer_view()
                 transaction = engine.provider.MainProvider.get_transaction(tx_hash)
                 transaction_receipt = engine.provider.MainProvider.get_transaction_receipt(tx_hash)
 

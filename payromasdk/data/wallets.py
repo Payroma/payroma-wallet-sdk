@@ -61,3 +61,4 @@ def __loader() -> SPDatabase.DataManager:
 
 
 db = __loader()
+__all__ = ['db']

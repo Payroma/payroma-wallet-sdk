@@ -4,8 +4,9 @@ from ..tools import interface
 
 
 class TokenEngine(object):
-    def __init__(self, token_interface: interface.Token):
+    def __init__(self, token_interface: interface.Token, sender: interface.Address = None):
         self.interface = token_interface
+        self.sender = sender
 
     def name(self) -> str:
         pass
@@ -42,6 +43,9 @@ class TokenEngine(object):
     def decrease_allowance(self, spender: interface.Address, amount: interface.EtherAmount) -> dict:
         pass
 
+    def _build_transaction(self, method) -> dict:
+        pass
+
 
 class PayromaTokenEngine(TokenEngine):
     def __init__(self, token_interface: interface.Token):
@@ -53,13 +57,13 @@ class PayromaTokenEngine(TokenEngine):
     def inflation_rate_annually(self) -> int:
         pass
 
-    def inflation_duration_end_date(self) -> str:
+    def inflation_duration_end_date(self) -> int:
         pass
 
     def available_to_mint_current_year(self) -> interface.WeiAmount:
         pass
 
-    def transfer_multiple(self, address: list, amounts: list) -> dict:
+    def transfer_multiple(self, addresses: list, amounts: list) -> dict:
         pass
 
     def burn(self, amount: interface.EtherAmount) -> dict:
@@ -72,7 +76,7 @@ class PayromaTokenEngine(TokenEngine):
     def mint(self, amount: interface.EtherAmount) -> dict:
         pass
 
-    def recover_token(self) -> dict:
+    def recover_token(self, token_address: interface.Address, amount: interface.EtherAmount) -> dict:
         pass
 
     def renounce_ownership(self) -> dict:
@@ -80,3 +84,6 @@ class PayromaTokenEngine(TokenEngine):
 
     def transfer_ownership(self, new_owner: interface.Address) -> dict:
         pass
+
+
+__all__ = ['TokenEngine', 'PayromaTokenEngine']

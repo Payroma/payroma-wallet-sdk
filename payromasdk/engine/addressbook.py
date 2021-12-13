@@ -38,3 +38,6 @@ def remove(address_book_interface: interface.AddressBook) -> bool:
             valid = True
 
     return valid
+
+
+__all__ = ['get_all', 'add_new', 'remove']

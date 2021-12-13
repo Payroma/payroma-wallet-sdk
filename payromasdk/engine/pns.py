@@ -4,8 +4,8 @@ from ..tools import interface
 
 
 class PNSEngine(object):
-    def __init__(self):
-        pass
+    def __init__(self, sender: interface.Address = None):
+        self.sender = sender
 
     def owner(self) -> interface.Address:
         pass
@@ -52,3 +52,9 @@ class PNSEngine(object):
 
     def transfer_ownership(self, new_owner: interface.Address) -> dict:
         pass
+
+    def _build_transaction(self, method) -> dict:
+        pass
+
+
+__all__ = ['PNSEngine']

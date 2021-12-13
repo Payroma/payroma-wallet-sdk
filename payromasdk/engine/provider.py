@@ -79,7 +79,12 @@ class __Provider(object):
             return datastructures.AttributeDict(dict())
 
 
-class __MainProvider(__Provider):
+class _MainProvider(__Provider):
+    def connect(self, network_interface: interface.Network) -> bool:
+        interface.Address.networkInterface = network_interface
+        interface.TXHash.networkInterface = network_interface
+        return super(_MainProvider, self).connect(network_interface)
+
     def balance_of(self, address: interface.Address) -> interface.WeiAmount:
         return interface.WeiAmount(
             self.web3.eth.get_balance(address.value()), decimals=18
@@ -89,7 +94,7 @@ class __MainProvider(__Provider):
         return self.web3.eth.block_number
 
 
-class __PNSProvider(__Provider):
+class _PNSProvider(__Provider):
     def contract(self) -> interface.Address:
         return self.__contract
 
@@ -97,5 +102,6 @@ class __PNSProvider(__Provider):
         self. __contract = address
 
 
-MainProvider = __MainProvider()
-PNSProvider = __PNSProvider()
+MainProvider = _MainProvider()
+PNSProvider = _PNSProvider()
+__all__ = ['Metadata', 'MainProvider', 'PNSProvider']

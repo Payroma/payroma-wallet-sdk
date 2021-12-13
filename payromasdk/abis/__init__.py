@@ -23,3 +23,6 @@ with open(STAKE_ABI_PATH) as file:
 
 with open(PNS_ABI_PATH) as file:
     pnsABI = json.load(file)
+
+
+__all__ = ['TOKEN_ABI_PATH', 'STAKE_ABI_PATH', 'PNS_ABI_PATH', 'tokenABI', 'stakeABI', 'pnsABI']

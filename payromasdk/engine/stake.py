@@ -4,8 +4,9 @@ from ..tools import interface
 
 
 class StakeEngine(object):
-    def __init__(self, stake_interface: interface.Stake):
+    def __init__(self, stake_interface: interface.Stake, sender: interface.Address = None):
         self.interface = stake_interface
+        self.sender = sender
 
     def owner(self) -> interface.Address:
         pass
@@ -25,7 +26,7 @@ class StakeEngine(object):
     def is_paused(self) -> bool:
         pass
 
-    def last_pause_time(self) -> str:
+    def last_pause_time(self) -> int:
         pass
 
     def acc_token_per_share(self) -> interface.WeiAmount:
@@ -107,3 +108,9 @@ class StakeEngine(object):
 
     def transfer_ownership(self, new_owner: interface.Address) -> dict:
         pass
+
+    def _build_transaction(self, method) -> dict:
+        pass
+
+
+__all__ = ['StakeEngine']

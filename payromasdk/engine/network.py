@@ -38,3 +38,6 @@ def remove(network_interface: interface.Network) -> bool:
             valid = True
 
     return valid
+
+
+__all__ = ['get_all', 'add_new', 'remove']

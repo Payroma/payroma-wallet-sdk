@@ -29,6 +29,8 @@ class Network(object):
 
 
 class Address(object):
+    networkInterface: Network = None
+
     def __init__(
             self, value: str
     ):
@@ -44,8 +46,8 @@ class Address(object):
     def to_integer(self) -> int:
         return self.__int
 
-    def explorer_view(self, network_interface: Network, browse: bool = True) -> str:
-        url = '{}/address/{}'.format(network_interface.explorer, self.__value)
+    def explorer_view(self, browse: bool = True) -> str:
+        url = '{}/address/{}'.format(Address.networkInterface.explorer, self.__value)
         if browse:
             webbrowser.open_new(url)
 
@@ -53,6 +55,8 @@ class Address(object):
 
 
 class TXHash(object):
+    networkInterface: Network = None
+
     def __init__(
             self, value: str
     ):
@@ -69,8 +73,8 @@ class TXHash(object):
     def to_integer(self) -> int:
         return self.__int
 
-    def explorer_view(self, network_interface: Network, browse: bool = True) -> str:
-        url = '{}/tx/{}'.format(network_interface.explorer, self.__value)
+    def explorer_view(self, browse: bool = True) -> str:
+        url = '{}/tx/{}'.format(TXHash.networkInterface.explorer, self.__value)
         if browse:
             webbrowser.open_new(url)
 
@@ -226,16 +230,16 @@ class Stake(object):
 
     def __init__(
             self, contract: Address, end_block: int, duration: str,
-            stake_token_contract: Address, reward_token_contract: Address,
-            stake_token_symbol: str, reward_token_symbol: str,
-            stake_token_decimals: int, reward_token_decimals: int
+            stake_token: Token, reward_token: Token
     ):
         self.contract = contract
         self.endBlock = end_block
         self.duration = duration
-        self.stakeTokenContract = stake_token_contract
-        self.rewardTokenContract = reward_token_contract
-        self.stakeTokenSymbol = stake_token_symbol
-        self.rewardTokenSymbol = reward_token_symbol
-        self.stakeTokenDecimals = stake_token_decimals
-        self.rewardTokenDecimals = reward_token_decimals
+        self.stakeToken = stake_token
+        self.rewardToken = reward_token
+
+
+__all__ = [
+    'Network', 'Address', 'TXHash', 'WeiAmount', 'EtherAmount',
+    'Wallet', 'Token', 'Transaction', 'AddressBook', 'Stake'
+]

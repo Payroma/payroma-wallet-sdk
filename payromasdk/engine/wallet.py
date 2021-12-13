@@ -228,3 +228,6 @@ class WalletEngine(object):
                 valid = True
 
         return valid
+
+
+__all__ = ['get_all', 'add_new', 'remove', 'backup_wallets', 'import_wallets', 'WalletEngine']
