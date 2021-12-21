@@ -118,7 +118,7 @@ payroma_token_engine = engine.token.PayromaTokenEngine(token_interface=token, se
 
 class TokenUnitTesting(unittest.TestCase):
     # Token engine
-    def _test_token_engine(self):
+    def test_token_engine(self):
         function_name('TokenEngine')
 
         # Task
@@ -255,7 +255,7 @@ class TokenUnitTesting(unittest.TestCase):
             )
 
     # Payroma token engine
-    def _test_owner(self):
+    def test_owner(self):
         function_name('owner')
 
         # Task
@@ -270,7 +270,7 @@ class TokenUnitTesting(unittest.TestCase):
         # Test
         self.assertEqual(result.value(), '0x149A03EBA3c0786581ad4b2cEC8082ef9e9425Bb')
 
-    def _test_inflation_rate_annually(self):
+    def test_inflation_rate_annually(self):
         function_name('inflation_rate_annually')
 
         # Task
@@ -285,7 +285,7 @@ class TokenUnitTesting(unittest.TestCase):
         # Test
         self.assertEqual(result, 5)
 
-    def _test_inflation_duration_end_date(self):
+    def test_inflation_duration_end_date(self):
         function_name('inflation_duration_end_date')
 
         # Task
@@ -300,7 +300,7 @@ class TokenUnitTesting(unittest.TestCase):
         # Test
         self.assertIsInstance(result, int)
 
-    def _test_available_to_mint_current_year(self):
+    def test_available_to_mint_current_year(self):
         function_name('available_to_mint_current_year')
 
         # Task
@@ -376,7 +376,7 @@ class TokenUnitTesting(unittest.TestCase):
                 payroma_token_engine.total_supply().value()
             )
 
-    def test_burn_from(self):
+    def _test_burn_from(self):
         function_name('burn_from')
 
         amount = tools.interface.EtherAmount(5, decimals=payroma_token_engine.interface.decimals)
