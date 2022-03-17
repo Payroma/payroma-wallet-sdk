@@ -47,8 +47,11 @@ class StakeEngine(object):
     def last_reward_block(self) -> int:
         return self.contract.functions.lastRewardBlock().call()
 
-    def pool_limit_per_user(self) -> int:
-        return self.contract.functions.poolLimitPerUser().call()
+    def pool_limit_per_user(self) -> interface.WeiAmount:
+        return interface.WeiAmount(
+            value=self.contract.functions.poolLimitPerUser().call(),
+            decimals=self.interface.stakeToken.decimals
+        )
 
     def reward_per_block(self) -> interface.WeiAmount:
         return interface.WeiAmount(
@@ -56,8 +59,11 @@ class StakeEngine(object):
             decimals=self.interface.rewardToken.decimals
         )
 
-    def precision_factor(self) -> int:
-        return self.contract.functions.PRECISION_FACTOR().call()
+    def precision_factor(self) -> interface.WeiAmount:
+        return interface.WeiAmount(
+            value=self.contract.functions.PRECISION_FACTOR().call(),
+            decimals=self.interface.rewardToken.decimals
+        )
 
     def reward_token(self) -> interface.Address:
         return interface.Address(self.contract.functions.rewardToken().call())
@@ -69,6 +75,12 @@ class StakeEngine(object):
         return interface.WeiAmount(
             value=self.contract.functions.totalSupply().call(),
             decimals=self.interface.stakeToken.decimals
+        )
+
+    def reward_supply(self) -> interface.WeiAmount:
+        return interface.WeiAmount(
+            value=self.contract.functions.rewardSupply().call(),
+            decimals=self.interface.rewardToken.decimals
         )
 
     def balance_of(self, address: interface.Address) -> interface.WeiAmount:
