@@ -93,12 +93,12 @@ class TokenEngine(object):
             elif npt_type == 'uint256':
                 args[npt_name] = interface.WeiAmount(value=value, decimals=self.interface.decimals)
             elif npt_type == 'address[]':
-                args[npt_name] = [interface.Address(address) for address in value.split(',')]
+                args[npt_name] = [interface.Address(address) for address in value]
             elif npt_type == 'uint256[]':
                 args[npt_name] = [
                     interface.WeiAmount(
                         value=amount, decimals=self.interface.decimals
-                    ) for amount in value.split(',')
+                    ) for amount in value
                 ]
             else:
                 args[npt_name] = value

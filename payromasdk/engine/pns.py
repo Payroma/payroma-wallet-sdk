@@ -102,7 +102,7 @@ class PNSEngine(object):
             if npt_type == 'address':
                 args[npt_name] = interface.Address(value)
             elif npt_type == 'address[]':
-                args[npt_name] = [interface.Address(address) for address in value.split(',')]
+                args[npt_name] = [interface.Address(address) for address in value]
             else:
                 args[npt_name] = value
 
