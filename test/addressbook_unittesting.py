@@ -68,7 +68,7 @@ class AddressBookUnitTesting(unittest.TestCase):
                 print(f"""
                 attempt: {i}
                 ------------
-                address_id: {address_book.addressID}
+                address_id: {address_book.id}
                 address: {address_book.address.value()}
                 username: {address_book.username}
                 """)
@@ -77,7 +77,7 @@ class AddressBookUnitTesting(unittest.TestCase):
             self.assertIsInstance(address_book, tools.interface.AddressBook, msg="it's not address book interface")
             self.assertIsInstance(address_book.address, tools.interface.Address, msg="it's not address interface")
             self.assertIsInstance(address_book.username, str)
-            self.assertEqual(address_book.address.to_integer(), address_book.addressID)
+            self.assertEqual(address_book.address.to_integer(), address_book.id)
 
     def test_remove(self):
         function_name('remove')
@@ -90,7 +90,7 @@ class AddressBookUnitTesting(unittest.TestCase):
                 print(f"""
                 attempt: {i}
                 ------------
-                address_id: {address_book.addressID}
+                address_id: {address_book.id}
                 address: {address_book.address.value()}
                 username: {address_book.username}
                 result: {result}

@@ -85,7 +85,7 @@ class NetworkUnitTesting(unittest.TestCase):
                 print(f"""
                 attempt: {i}
                 ------------
-                networkID: {network.networkID}
+                networkID: {network.id}
                 name: {network.name}
                 rpc: {network.rpc}
                 chainID: {network.chainID}
@@ -95,7 +95,7 @@ class NetworkUnitTesting(unittest.TestCase):
 
             # Test
             self.assertIsInstance(network, tools.interface.Network, msg="it's not network interface")
-            self.assertIsInstance(network.networkID, int)
+            self.assertIsInstance(network.id, int)
             self.assertIsInstance(network.name, str)
             self.assertIsInstance(network.rpc, str)
             self.assertIsInstance(network.chainID, int)
@@ -113,7 +113,7 @@ class NetworkUnitTesting(unittest.TestCase):
                 print(f"""
                 attempt: {i}
                 ------------
-                networkID: {network.networkID}
+                networkID: {network.id}
                 name: {network.name}
                 rpc: {network.rpc}
                 chainID: {network.chainID}

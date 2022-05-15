@@ -154,7 +154,7 @@ class WalletUnitTesting(unittest.TestCase):
                 print(f"""
                 attempt: {i}
                 ------------
-                address_id: {wallet.addressID}
+                address_id: {wallet.id}
                 address: {wallet.address.value()}
                 username: {wallet.username}
                 pin_code: {wallet.pinCode}
@@ -169,7 +169,7 @@ class WalletUnitTesting(unittest.TestCase):
             self.assertIsInstance(wallet.pinCode, bytes)
             self.assertIsInstance(wallet.dateCreated, str)
             self.assertIsInstance(wallet.isFavorite, bool)
-            self.assertEqual(wallet.address.to_integer(), wallet.addressID)
+            self.assertEqual(wallet.address.to_integer(), wallet.id)
 
     def _test_remove(self):
         function_name('remove')
@@ -182,7 +182,7 @@ class WalletUnitTesting(unittest.TestCase):
                 print(f"""
                 attempt: {i}
                 ------------
-                address_id: {wallet.addressID}
+                address_id: {wallet.id}
                 address: {wallet.address.value()}
                 username: {wallet.username}
                 pin_code: {wallet.pinCode}

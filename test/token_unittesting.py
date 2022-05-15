@@ -183,7 +183,7 @@ class TokenUnitTesting(unittest.TestCase):
         # Test
         self.assertIsInstance(result.value(), int)
 
-    def _test_transfer(self):
+    def test_transfer(self):
         function_name('transfer')
 
         token_engine.sender = wallet1_address  # Set sender address to token engine
@@ -208,7 +208,7 @@ class TokenUnitTesting(unittest.TestCase):
                 token_engine.balance_of(wallet2_address).value()
             )
 
-    def _test_approve(self):
+    def test_approve(self):
         function_name('approve')
 
         token_engine.sender = wallet2_address  # Set sender address to token engine
@@ -227,7 +227,7 @@ class TokenUnitTesting(unittest.TestCase):
                 token_engine.allowance(token_engine.sender, wallet1_address).value()
             )
 
-    def _test_transfer_from(self):
+    def test_transfer_from(self):
         function_name('transfer_from')
 
         token_engine.sender = wallet1_address  # Set sender address to token engine
@@ -315,7 +315,7 @@ class TokenUnitTesting(unittest.TestCase):
         # Test
         self.assertIsInstance(result.to_ether(), float)
 
-    def _test_transfer_multiple(self):
+    def test_transfer_multiple(self):
         function_name('transfer_multiple')
 
         addresses = [
@@ -352,7 +352,7 @@ class TokenUnitTesting(unittest.TestCase):
                     payroma_token_engine.balance_of(address).value()
                 )
 
-    def _test_burn(self):
+    def test_burn(self):
         function_name('burn')
 
         amount = tools.interface.EtherAmount(100, decimals=payroma_token_engine.interface.decimals)
@@ -376,7 +376,7 @@ class TokenUnitTesting(unittest.TestCase):
                 payroma_token_engine.total_supply().value()
             )
 
-    def _test_burn_from(self):
+    def test_burn_from(self):
         function_name('burn_from')
 
         amount = tools.interface.EtherAmount(5, decimals=payroma_token_engine.interface.decimals)
