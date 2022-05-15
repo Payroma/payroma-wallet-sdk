@@ -20,15 +20,18 @@ from typing import Union
 ## SDK Configure
 Set the application password for database
 ```text
-data.networks.py
-data.wallets.py
-data.tokens.py
-data.transactions.py
-data.addressesbook.py
+data/loader.py
 ```
 ```python
-config, SPSecurity.secure_string(
-    # Set the application password here
+SPSecurity.secure_string(
+    # Set the application password here, it must be changed in a real environment
     (116, 101, 115, 116)
 ).decode()
+```
+```text
+data/addressesbook.py
+```
+```python
+# Set the application password here, it must be changed in a real environment
+loader.loader(file_name='addressesbook', password='')
 ```
