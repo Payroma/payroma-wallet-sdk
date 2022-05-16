@@ -204,13 +204,15 @@ class AddressBook(object):
 
 class Stake(object):
     def __init__(
-            self, contract: Address, stake_token: Token, reward_token: Token, expiry_date: int
+            self, contract: Address, stake_token: Token, reward_token: Token,
+            expiry_date: int, is_favorite: bool
     ):
         self.id = contract.to_integer()
         self.contract = contract
         self.stakeToken = stake_token
         self.rewardToken = reward_token
         self.expiryDate = expiry_date
+        self.isFavorite = is_favorite
 
 
 __all__ = [

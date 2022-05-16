@@ -16,17 +16,30 @@ def __fetching(url: str) -> dict:
         return {}
 
 
+def __favorite_sort(contracts: list) -> list:
+    items = contracts.copy()
+    favorites = [i for i in items if i.isFavorite]
+    for i in favorites:
+        items.remove(i)
+
+    return favorites + items
+
+
 def get_all(filter_by_network: bool = False) -> list:
     result = []
 
     if filter_by_network:
         try:
             current_network = MainProvider.interface.id
-            result = stakecontracts.db.get_item(current_network)
+            contracts = stakecontracts.db.get_item(current_network)
+            result = __favorite_sort(contracts)
         except KeyError:
             pass
+
     else:
         result = list(stakecontracts.db.get_data().values())
+        for index, contracts in enumerate(result):
+            result[index] = __favorite_sort(contracts)
 
     return result
 
@@ -59,7 +72,8 @@ def add_new(
         contract=contract,
         stake_token=stake_token_interface,
         reward_token=reward_token_interface,
-        expiry_date=expiry_date
+        expiry_date=expiry_date,
+        is_favorite=False
     )
 
     valid = False
@@ -306,6 +320,10 @@ class StakeEngine(object):
         return self._build_transaction(
             self.contract.functions.transferOwnership(new_owner.value())
         )
+
+    def set_favorite(self, status: bool):
+        self.interface.isFavorite = status
+        stakecontracts.db.dump()
 
     def _build_transaction(self, method) -> dict:
         if not isinstance(self.sender, interface.Address):
